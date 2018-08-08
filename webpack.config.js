@@ -19,6 +19,10 @@ module.exports = {
                 use: {
                     loader: "babel-loader"
                 }
+            },
+            {
+                test: /\.purs$/,
+                use: ["purs-loader"]
             }
         ]
     },
