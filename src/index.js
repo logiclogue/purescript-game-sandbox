@@ -1,1 +1,3 @@
-console.log("It worked!");
+const { createGameState, updatePlayer } = require("./GameState.purs");
+
+console.log(createGameState("Jordan"));
