@@ -1,11 +1,36 @@
-module GameState(GameState, createGameState, updatePlayer) where
+module GameState(
+    GameState, UserType, createGameState, updatePlayer, guest, class Serialise,
+    serialise
+) where
 
-type GameState = {
+import Prelude (class Show, (<>))
+import Data.Newtype (class Newtype)
+
+newtype GameState = GameState {
     player :: String
 }
 
-createGameState :: String -> GameState
-createGameState player = { player }
+data UserType = Admin | Guest
 
-updatePlayer :: String -> GameState -> GameState
-updatePlayer player gameState = gameState { player = player }
+instance newtypeGameState :: Newtype GameState String where
+    unwrap (GameState { player }) = player
+    wrap   player                 = GameState { player: player }
+
+instance showUserType :: Show UserType where
+    show Admin = "Admin"
+    show Guest = "Admin"
+
+class Serialise a where
+    serialise :: a -> String
+
+instance serialiseGameState :: Serialise GameState where
+    serialise (GameState { player }) = "{" <> player <> "}"
+
+createGameState :: String -> GameState
+createGameState player = GameState { player }
+
+updatePlayer :: (String -> String) -> GameState -> GameState
+updatePlayer f (GameState gameState) = GameState (gameState { player = f gameState.player })
+
+guest :: UserType
+guest = Guest
